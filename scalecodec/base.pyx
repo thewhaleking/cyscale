@@ -16,6 +16,7 @@
 
 import re
 import warnings
+import weakref
 from abc import ABC, abstractmethod
 from functools import lru_cache
 from typing import Any, Optional, TYPE_CHECKING, Union
@@ -66,7 +67,7 @@ class RuntimeConfigurationObject:
         self.implements_scale_info = implements_scale_info
         self.arrow_match_re = re.compile(r'^([^<]*)<(.+)>$')
         self.bracket_match_re = re.compile(r'^\[([A-Za-z0-9]+); ([0-9]+)]$')
-        self._dynamic_class_cache: dict = {}
+        self._dynamic_class_cache: weakref.WeakValueDictionary = weakref.WeakValueDictionary()
 
     @classmethod
     @lru_cache(maxsize=128)
