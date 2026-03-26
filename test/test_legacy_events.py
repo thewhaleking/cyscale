@@ -165,6 +165,10 @@ class TestScaleInfoEventDecoding(unittest.TestCase):
         RuntimeConfiguration().add_portable_registry(cls.metadata)
 
     @classmethod
+    def tearDownClass(cls):
+        RuntimeConfiguration().ss58_format = None
+
+    @classmethod
     def _build_event_bytes(
         cls, phase_bytes: bytes, module_variant: int, inner_variant: int, payload: bytes
     ) -> str:
