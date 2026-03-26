@@ -45,3 +45,8 @@ exclude = ["contrib", "docs", "tests", "test"]
 
 [tool.setuptools.package-data]
 "scalecodec.type_registry" = ["*.json"]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.2",
+]
