@@ -2369,7 +2369,7 @@ return 0;
 #endif
 /* #### Code section: module_code ### */
 
-/* "scalecodec/utils/_math.pyx":25
+/* "scalecodec/utils/_math.pyx":10
  * 
  * 
  * cpdef int trailing_zeros(int64_t value) nogil:             # <<<<<<<<<<<<<<
@@ -2389,7 +2389,7 @@ static int __pyx_f_10scalecodec_5utils_5_math_trailing_zeros(int64_t __pyx_v_val
   int __pyx_r;
   int __pyx_t_1;
 
-  /* "scalecodec/utils/_math.pyx":29
+  /* "scalecodec/utils/_math.pyx":14
  *     the given integer.
  *     """
  *     cdef int num_zeros = 0             # <<<<<<<<<<<<<<
@@ -2398,7 +2398,7 @@ static int __pyx_f_10scalecodec_5utils_5_math_trailing_zeros(int64_t __pyx_v_val
 */
   __pyx_v_num_zeros = 0;
 
-  /* "scalecodec/utils/_math.pyx":30
+  /* "scalecodec/utils/_math.pyx":15
  *     """
  *     cdef int num_zeros = 0
  *     while value & 1 == 0:             # <<<<<<<<<<<<<<
@@ -2409,7 +2409,7 @@ static int __pyx_f_10scalecodec_5utils_5_math_trailing_zeros(int64_t __pyx_v_val
     __pyx_t_1 = ((__pyx_v_value & 1) == 0);
     if (!__pyx_t_1) break;
 
-    /* "scalecodec/utils/_math.pyx":31
+    /* "scalecodec/utils/_math.pyx":16
  *     cdef int num_zeros = 0
  *     while value & 1 == 0:
  *         num_zeros += 1             # <<<<<<<<<<<<<<
@@ -2418,7 +2418,7 @@ static int __pyx_f_10scalecodec_5utils_5_math_trailing_zeros(int64_t __pyx_v_val
 */
     __pyx_v_num_zeros = (__pyx_v_num_zeros + 1);
 
-    /* "scalecodec/utils/_math.pyx":32
+    /* "scalecodec/utils/_math.pyx":17
  *     while value & 1 == 0:
  *         num_zeros += 1
  *         value >>= 1             # <<<<<<<<<<<<<<
@@ -2428,7 +2428,7 @@ static int __pyx_f_10scalecodec_5utils_5_math_trailing_zeros(int64_t __pyx_v_val
     __pyx_v_value = (__pyx_v_value >> 1);
   }
 
-  /* "scalecodec/utils/_math.pyx":33
+  /* "scalecodec/utils/_math.pyx":18
  *         num_zeros += 1
  *         value >>= 1
  *     return num_zeros             # <<<<<<<<<<<<<<
@@ -2438,7 +2438,7 @@ static int __pyx_f_10scalecodec_5utils_5_math_trailing_zeros(int64_t __pyx_v_val
   __pyx_r = __pyx_v_num_zeros;
   goto __pyx_L0;
 
-  /* "scalecodec/utils/_math.pyx":25
+  /* "scalecodec/utils/_math.pyx":10
  * 
  * 
  * cpdef int trailing_zeros(int64_t value) nogil:             # <<<<<<<<<<<<<<
@@ -2491,32 +2491,32 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   {
     PyObject ** const __pyx_pyargnames[] = {&__pyx_mstate_global->__pyx_n_u_value,0};
     const Py_ssize_t __pyx_kwds_len = (__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
-    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 25, __pyx_L3_error)
+    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 10, __pyx_L3_error)
     if (__pyx_kwds_len > 0) {
       switch (__pyx_nargs) {
         case  1:
         values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 25, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 10, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  0: break;
         default: goto __pyx_L5_argtuple_error;
       }
       const Py_ssize_t kwd_pos_args = __pyx_nargs;
-      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "trailing_zeros", 0) < (0)) __PYX_ERR(0, 25, __pyx_L3_error)
+      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "trailing_zeros", 0) < (0)) __PYX_ERR(0, 10, __pyx_L3_error)
       for (Py_ssize_t i = __pyx_nargs; i < 1; i++) {
-        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("trailing_zeros", 1, 1, 1, i); __PYX_ERR(0, 25, __pyx_L3_error) }
+        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("trailing_zeros", 1, 1, 1, i); __PYX_ERR(0, 10, __pyx_L3_error) }
       }
     } else if (unlikely(__pyx_nargs != 1)) {
       goto __pyx_L5_argtuple_error;
     } else {
       values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 25, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 10, __pyx_L3_error)
     }
-    __pyx_v_value = __Pyx_PyLong_As_int64_t(values[0]); if (unlikely((__pyx_v_value == ((int64_t)-1)) && PyErr_Occurred())) __PYX_ERR(0, 25, __pyx_L3_error)
+    __pyx_v_value = __Pyx_PyLong_As_int64_t(values[0]); if (unlikely((__pyx_v_value == ((int64_t)-1)) && PyErr_Occurred())) __PYX_ERR(0, 10, __pyx_L3_error)
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("trailing_zeros", 1, 1, 1, __pyx_nargs); __PYX_ERR(0, 25, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("trailing_zeros", 1, 1, 1, __pyx_nargs); __PYX_ERR(0, 10, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -2547,8 +2547,8 @@ static PyObject *__pyx_pf_10scalecodec_5utils_5_math_trailing_zeros(CYTHON_UNUSE
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("trailing_zeros", 0);
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_f_10scalecodec_5utils_5_math_trailing_zeros(__pyx_v_value, 1); if (unlikely(__pyx_t_1 == ((int)-1) && PyErr_Occurred())) __PYX_ERR(0, 25, __pyx_L1_error)
-  __pyx_t_2 = __Pyx_PyLong_From_int(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 25, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_10scalecodec_5utils_5_math_trailing_zeros(__pyx_v_value, 1); if (unlikely(__pyx_t_1 == ((int)-1) && PyErr_Occurred())) __PYX_ERR(0, 10, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyLong_From_int(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 10, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_r = __pyx_t_2;
   __pyx_t_2 = 0;
@@ -2565,7 +2565,7 @@ static PyObject *__pyx_pf_10scalecodec_5utils_5_math_trailing_zeros(CYTHON_UNUSE
   return __pyx_r;
 }
 
-/* "scalecodec/utils/_math.pyx":36
+/* "scalecodec/utils/_math.pyx":21
  * 
  * 
  * cpdef int64_t next_power_of_two(int64_t value):             # <<<<<<<<<<<<<<
@@ -2593,7 +2593,7 @@ static int64_t __pyx_f_10scalecodec_5utils_5_math_next_power_of_two(int64_t __py
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("next_power_of_two", 0);
 
-  /* "scalecodec/utils/_math.pyx":41
+  /* "scalecodec/utils/_math.pyx":26
  *     """
  *     cdef int64_t result
  *     if value < 0:             # <<<<<<<<<<<<<<
@@ -2603,7 +2603,7 @@ static int64_t __pyx_f_10scalecodec_5utils_5_math_next_power_of_two(int64_t __py
   __pyx_t_1 = (__pyx_v_value < 0);
   if (unlikely(__pyx_t_1)) {
 
-    /* "scalecodec/utils/_math.pyx":42
+    /* "scalecodec/utils/_math.pyx":27
  *     cdef int64_t result
  *     if value < 0:
  *         raise ValueError("Negative integers not supported")             # <<<<<<<<<<<<<<
@@ -2616,14 +2616,14 @@ static int64_t __pyx_f_10scalecodec_5utils_5_math_next_power_of_two(int64_t __py
       PyObject *__pyx_callargs[2] = {__pyx_t_3, __pyx_mstate_global->__pyx_kp_u_Negative_integers_not_supported};
       __pyx_t_2 = __Pyx_PyObject_FastCall((PyObject*)(((PyTypeObject*)PyExc_ValueError)), __pyx_callargs+__pyx_t_4, (2-__pyx_t_4) | (__pyx_t_4*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
       __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-      if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 42, __pyx_L1_error)
+      if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 27, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
     }
     __Pyx_Raise(__pyx_t_2, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __PYX_ERR(0, 42, __pyx_L1_error)
+    __PYX_ERR(0, 27, __pyx_L1_error)
 
-    /* "scalecodec/utils/_math.pyx":41
+    /* "scalecodec/utils/_math.pyx":26
  *     """
  *     cdef int64_t result
  *     if value < 0:             # <<<<<<<<<<<<<<
@@ -2632,7 +2632,7 @@ static int64_t __pyx_f_10scalecodec_5utils_5_math_next_power_of_two(int64_t __py
 */
   }
 
-  /* "scalecodec/utils/_math.pyx":43
+  /* "scalecodec/utils/_math.pyx":28
  *     if value < 0:
  *         raise ValueError("Negative integers not supported")
  *     if value <= 1:             # <<<<<<<<<<<<<<
@@ -2642,7 +2642,7 @@ static int64_t __pyx_f_10scalecodec_5utils_5_math_next_power_of_two(int64_t __py
   __pyx_t_1 = (__pyx_v_value <= 1);
   if (__pyx_t_1) {
 
-    /* "scalecodec/utils/_math.pyx":44
+    /* "scalecodec/utils/_math.pyx":29
  *         raise ValueError("Negative integers not supported")
  *     if value <= 1:
  *         return 1             # <<<<<<<<<<<<<<
@@ -2652,7 +2652,7 @@ static int64_t __pyx_f_10scalecodec_5utils_5_math_next_power_of_two(int64_t __py
     __pyx_r = 1;
     goto __pyx_L0;
 
-    /* "scalecodec/utils/_math.pyx":43
+    /* "scalecodec/utils/_math.pyx":28
  *     if value < 0:
  *         raise ValueError("Negative integers not supported")
  *     if value <= 1:             # <<<<<<<<<<<<<<
@@ -2661,7 +2661,7 @@ static int64_t __pyx_f_10scalecodec_5utils_5_math_next_power_of_two(int64_t __py
 */
   }
 
-  /* "scalecodec/utils/_math.pyx":45
+  /* "scalecodec/utils/_math.pyx":30
  *     if value <= 1:
  *         return 1
  *     result = 1             # <<<<<<<<<<<<<<
@@ -2670,7 +2670,7 @@ static int64_t __pyx_f_10scalecodec_5utils_5_math_next_power_of_two(int64_t __py
 */
   __pyx_v_result = 1;
 
-  /* "scalecodec/utils/_math.pyx":46
+  /* "scalecodec/utils/_math.pyx":31
  *         return 1
  *     result = 1
  *     while result < value:             # <<<<<<<<<<<<<<
@@ -2681,7 +2681,7 @@ static int64_t __pyx_f_10scalecodec_5utils_5_math_next_power_of_two(int64_t __py
     __pyx_t_1 = (__pyx_v_result < __pyx_v_value);
     if (!__pyx_t_1) break;
 
-    /* "scalecodec/utils/_math.pyx":47
+    /* "scalecodec/utils/_math.pyx":32
  *     result = 1
  *     while result < value:
  *         result <<= 1             # <<<<<<<<<<<<<<
@@ -2690,7 +2690,7 @@ static int64_t __pyx_f_10scalecodec_5utils_5_math_next_power_of_two(int64_t __py
     __pyx_v_result = (__pyx_v_result << 1);
   }
 
-  /* "scalecodec/utils/_math.pyx":48
+  /* "scalecodec/utils/_math.pyx":33
  *     while result < value:
  *         result <<= 1
  *     return result             # <<<<<<<<<<<<<<
@@ -2698,7 +2698,7 @@ static int64_t __pyx_f_10scalecodec_5utils_5_math_next_power_of_two(int64_t __py
   __pyx_r = __pyx_v_result;
   goto __pyx_L0;
 
-  /* "scalecodec/utils/_math.pyx":36
+  /* "scalecodec/utils/_math.pyx":21
  * 
  * 
  * cpdef int64_t next_power_of_two(int64_t value):             # <<<<<<<<<<<<<<
@@ -2757,32 +2757,32 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   {
     PyObject ** const __pyx_pyargnames[] = {&__pyx_mstate_global->__pyx_n_u_value,0};
     const Py_ssize_t __pyx_kwds_len = (__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
-    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 36, __pyx_L3_error)
+    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 21, __pyx_L3_error)
     if (__pyx_kwds_len > 0) {
       switch (__pyx_nargs) {
         case  1:
         values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 36, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 21, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  0: break;
         default: goto __pyx_L5_argtuple_error;
       }
       const Py_ssize_t kwd_pos_args = __pyx_nargs;
-      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "next_power_of_two", 0) < (0)) __PYX_ERR(0, 36, __pyx_L3_error)
+      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "next_power_of_two", 0) < (0)) __PYX_ERR(0, 21, __pyx_L3_error)
       for (Py_ssize_t i = __pyx_nargs; i < 1; i++) {
-        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("next_power_of_two", 1, 1, 1, i); __PYX_ERR(0, 36, __pyx_L3_error) }
+        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("next_power_of_two", 1, 1, 1, i); __PYX_ERR(0, 21, __pyx_L3_error) }
       }
     } else if (unlikely(__pyx_nargs != 1)) {
       goto __pyx_L5_argtuple_error;
     } else {
       values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 36, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 21, __pyx_L3_error)
     }
-    __pyx_v_value = __Pyx_PyLong_As_int64_t(values[0]); if (unlikely((__pyx_v_value == ((int64_t)-1)) && PyErr_Occurred())) __PYX_ERR(0, 36, __pyx_L3_error)
+    __pyx_v_value = __Pyx_PyLong_As_int64_t(values[0]); if (unlikely((__pyx_v_value == ((int64_t)-1)) && PyErr_Occurred())) __PYX_ERR(0, 21, __pyx_L3_error)
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("next_power_of_two", 1, 1, 1, __pyx_nargs); __PYX_ERR(0, 36, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("next_power_of_two", 1, 1, 1, __pyx_nargs); __PYX_ERR(0, 21, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -2813,8 +2813,8 @@ static PyObject *__pyx_pf_10scalecodec_5utils_5_math_2next_power_of_two(CYTHON_U
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("next_power_of_two", 0);
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_f_10scalecodec_5utils_5_math_next_power_of_two(__pyx_v_value, 1); if (unlikely(__pyx_t_1 == ((int64_t)-1L) && PyErr_Occurred())) __PYX_ERR(0, 36, __pyx_L1_error)
-  __pyx_t_2 = __Pyx_PyLong_From_int64_t(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 36, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_10scalecodec_5utils_5_math_next_power_of_two(__pyx_v_value, 1); if (unlikely(__pyx_t_1 == ((int64_t)-1L) && PyErr_Occurred())) __PYX_ERR(0, 21, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyLong_From_int64_t(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 21, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_r = __pyx_t_2;
   __pyx_t_2 = 0;
@@ -3179,40 +3179,40 @@ __Pyx_RefNannySetupContext("PyInit__math", 0);
   (void)__Pyx_modinit_function_import_code(__pyx_mstate);
   /*--- Execution code ---*/
 
-  /* "scalecodec/utils/_math.pyx":25
+  /* "scalecodec/utils/_math.pyx":10
  * 
  * 
  * cpdef int trailing_zeros(int64_t value) nogil:             # <<<<<<<<<<<<<<
  *     """Returns the number of trailing zeros in the binary representation of
  *     the given integer.
 */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_10scalecodec_5utils_5_math_1trailing_zeros, 0, __pyx_mstate_global->__pyx_n_u_trailing_zeros, NULL, __pyx_mstate_global->__pyx_n_u_scalecodec_utils__math, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[0])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 25, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_10scalecodec_5utils_5_math_1trailing_zeros, 0, __pyx_mstate_global->__pyx_n_u_trailing_zeros, NULL, __pyx_mstate_global->__pyx_n_u_scalecodec_utils__math, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[0])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 10, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
   PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
   #endif
-  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_trailing_zeros, __pyx_t_2) < (0)) __PYX_ERR(0, 25, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_trailing_zeros, __pyx_t_2) < (0)) __PYX_ERR(0, 10, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "scalecodec/utils/_math.pyx":36
+  /* "scalecodec/utils/_math.pyx":21
  * 
  * 
  * cpdef int64_t next_power_of_two(int64_t value):             # <<<<<<<<<<<<<<
  *     """Returns the smallest power of two that is greater than or equal
  *     to the given integer.
 */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_10scalecodec_5utils_5_math_3next_power_of_two, 0, __pyx_mstate_global->__pyx_n_u_next_power_of_two, NULL, __pyx_mstate_global->__pyx_n_u_scalecodec_utils__math, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[1])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 36, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_10scalecodec_5utils_5_math_3next_power_of_two, 0, __pyx_mstate_global->__pyx_n_u_next_power_of_two, NULL, __pyx_mstate_global->__pyx_n_u_scalecodec_utils__math, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[1])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 21, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
   PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
   #endif
-  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_next_power_of_two, __pyx_t_2) < (0)) __PYX_ERR(0, 36, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_next_power_of_two, __pyx_t_2) < (0)) __PYX_ERR(0, 21, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
   /* "scalecodec/utils/_math.pyx":1
  * # cython: language_level=3, cdivision=True             # <<<<<<<<<<<<<<
- * # Python SCALE Codec Library
- * #
+ * 
+ * """Some simple math-related utility functions not present in the standard
 */
   __pyx_t_2 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
@@ -3361,7 +3361,7 @@ typedef struct {
     unsigned int num_kwonly_args : 1;
     unsigned int nlocals : 1;
     unsigned int flags : 10;
-    unsigned int first_line : 6;
+    unsigned int first_line : 5;
 } __Pyx_PyCode_New_function_description;
 /* NewCodeObj.proto */
 static PyObject* __Pyx_PyCode_New(
@@ -3378,12 +3378,12 @@ static int __Pyx_CreateCodeObjects(__pyx_mstatetype *__pyx_mstate) {
   PyObject* tuple_dedup_map = PyDict_New();
   if (unlikely(!tuple_dedup_map)) return -1;
   {
-    const __Pyx_PyCode_New_function_description descr = {1, 0, 0, 1, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 25};
+    const __Pyx_PyCode_New_function_description descr = {1, 0, 0, 1, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 10};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_value};
     __pyx_mstate_global->__pyx_codeobj_tab[0] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_scalecodec_utils__math_pyx, __pyx_mstate->__pyx_n_u_trailing_zeros, __pyx_mstate->__pyx_kp_b_iso88591_Cq_Q_1, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[0])) goto bad;
   }
   {
-    const __Pyx_PyCode_New_function_description descr = {1, 0, 0, 1, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 36};
+    const __Pyx_PyCode_New_function_description descr = {1, 0, 0, 1, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 21};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_value};
     __pyx_mstate_global->__pyx_codeobj_tab[1] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_scalecodec_utils__math_pyx, __pyx_mstate->__pyx_n_u_next_power_of_two, __pyx_mstate->__pyx_kp_b_iso88591_q_vRq_j_vS_q_Q_1_1_1, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[1])) goto bad;
   }

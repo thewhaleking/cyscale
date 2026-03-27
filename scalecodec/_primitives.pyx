@@ -8,10 +8,34 @@ from scalecodec._scale_bytes import ScaleBytes as _ScaleBytes
 from scalecodec.base import ScalePrimitive
 
 
+# ---------------------------------------------------------------------------
+# Fast decode functions for batch_decode() — bypass ScaleType object creation
+# ---------------------------------------------------------------------------
+
+def _fast_u8(data):   return data[0]
+def _fast_u16(data):  return _struct.unpack_from('<H', data)[0]
+def _fast_u32(data):  return _struct.unpack_from('<I', data)[0]
+def _fast_u64(data):  return _struct.unpack_from('<Q', data)[0]
+def _fast_u128(data): return int.from_bytes(data[:16], 'little')
+def _fast_u256(data): return int.from_bytes(data[:32], 'little')
+def _fast_bool(data): return bool(data[0])
+def _fast_h160(data): return '0x' + data[:20].hex()
+def _fast_h256(data): return '0x' + data[:32].hex()
+def _fast_h512(data): return '0x' + data[:64].hex()
+def _fast_i8(data):   return int.from_bytes(data[:1], 'little', signed=True)
+def _fast_i16(data):  return _struct.unpack_from('<h', data)[0]
+def _fast_i32(data):  return _struct.unpack_from('<i', data)[0]
+def _fast_i64(data):  return _struct.unpack_from('<q', data)[0]
+def _fast_i128(data): return int.from_bytes(data[:16], 'little', signed=True)
+def _fast_i256(data): return int.from_bytes(data[:32], 'little', signed=True)
+
+
 class U8(ScalePrimitive):
     """
     Unsigned 8-bit int type, encoded in little-endian (LE) format
     """
+    _batch_decode = _fast_u8
+    _fixed_size = 1
 
     def process(self):
         cdef bytearray raw = self.get_next_bytes(1)
@@ -29,6 +53,8 @@ class U16(ScalePrimitive):
     """
     Unsigned 16-bit int type, encoded in little-endian (LE) format
     """
+    _batch_decode = _fast_u16
+    _fixed_size = 2
 
     def process(self):
         cdef bytearray raw = self.get_next_bytes(2)
@@ -47,6 +73,8 @@ class U32(ScalePrimitive):
     """
     Unsigned 32-bit int type, encoded in little-endian (LE) format
     """
+    _batch_decode = _fast_u32
+    _fixed_size = 4
 
     def process(self):
         cdef bytearray raw = self.get_next_bytes(4)
@@ -68,6 +96,8 @@ class U64(ScalePrimitive):
     """
     Unsigned 64-bit int type, encoded in little-endian (LE) format
     """
+    _batch_decode = _fast_u64
+    _fixed_size = 8
 
     def process(self):
         cdef bytearray raw = self.get_next_bytes(8)
@@ -93,6 +123,8 @@ class U128(ScalePrimitive):
     """
     Unsigned 128-bit int type, encoded in little-endian (LE) format
     """
+    _batch_decode = _fast_u128
+    _fixed_size = 16
 
     def process(self):
         cdef bytearray raw = self.get_next_bytes(16)
@@ -110,6 +142,8 @@ class U256(ScalePrimitive):
     """
     Unsigned 256-bit int type, encoded in little-endian (LE) format
     """
+    _batch_decode = _fast_u256
+    _fixed_size = 32
 
     def process(self):
         cdef bytearray raw = self.get_next_bytes(32)
@@ -127,6 +161,8 @@ class I8(ScalePrimitive):
     """
     Signed 8-bit int type, encoded in little-endian (LE) format
     """
+    _batch_decode = _fast_i8
+    _fixed_size = 1
 
     def process(self):
         cdef bytearray raw = self.get_next_bytes(1)
@@ -144,6 +180,8 @@ class I16(ScalePrimitive):
     """
     Signed 16-bit int type, encoded in little-endian (LE) format
     """
+    _batch_decode = _fast_i16
+    _fixed_size = 2
 
     def process(self):
         cdef bytearray raw = self.get_next_bytes(2)
@@ -161,6 +199,8 @@ class I32(ScalePrimitive):
     """
     Signed 32-bit int type, encoded in little-endian (LE) format
     """
+    _batch_decode = _fast_i32
+    _fixed_size = 4
 
     def process(self):
         cdef bytearray raw = self.get_next_bytes(4)
@@ -178,6 +218,8 @@ class I64(ScalePrimitive):
     """
     Signed 64-bit int type, encoded in little-endian (LE) format
     """
+    _batch_decode = _fast_i64
+    _fixed_size = 8
 
     def process(self):
         cdef bytearray raw = self.get_next_bytes(8)
@@ -195,6 +237,8 @@ class I128(ScalePrimitive):
     """
     Signed 128-bit int type, encoded in little-endian (LE) format
     """
+    _batch_decode = _fast_i128
+    _fixed_size = 16
 
     def process(self):
         cdef bytearray raw = self.get_next_bytes(16)
@@ -212,6 +256,8 @@ class I256(ScalePrimitive):
     """
     Signed 256-bit int type, encoded in little-endian (LE) format
     """
+    _batch_decode = _fast_i256
+    _fixed_size = 32
 
     def process(self):
         cdef bytearray raw = self.get_next_bytes(32)
@@ -253,6 +299,8 @@ class H160(ScalePrimitive):
     """
     Fixed-size uninterpreted hash type with 20 bytes (160 bits) size.
     """
+    _batch_decode = _fast_h160
+    _fixed_size = 20
 
     def process(self):
         cdef bytearray raw = self.get_next_bytes(20)
@@ -268,6 +316,8 @@ class H256(ScalePrimitive):
     """
     Fixed-size uninterpreted hash type with 32 bytes (256 bits) size.
     """
+    _batch_decode = _fast_h256
+    _fixed_size = 32
 
     def process(self):
         cdef bytearray raw = self.get_next_bytes(32)
@@ -283,6 +333,8 @@ class H512(ScalePrimitive):
     """
     Fixed-size uninterpreted hash type with 64 bytes (512 bits) size.
     """
+    _batch_decode = _fast_h512
+    _fixed_size = 64
 
     def process(self):
         cdef bytearray raw = self.get_next_bytes(64)
@@ -302,6 +354,8 @@ class Bool(ScalePrimitive):
     """
     Boolean type
     """
+    _batch_decode = _fast_bool
+    _fixed_size = 1
 
     def process(self):
         return self.get_next_bool()

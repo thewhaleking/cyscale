@@ -1,6 +1,5 @@
 import re
 import warnings
-import weakref
 from abc import ABC, abstractmethod
 from functools import lru_cache
 from typing import Any, Optional, TYPE_CHECKING, Union
@@ -8,6 +7,41 @@ from typing import Any, Optional, TYPE_CHECKING, Union
 from scalecodec.constants import TYPE_DECOMP_MAX_RECURSIVE
 from scalecodec.exceptions import RemainingScaleBytesNotEmptyException, InvalidScaleTypeValueException
 from scalecodec._scale_bytes import ScaleBytes
+
+
+def _try_make_tuple_batch_decode(type_mapping, rc):
+    """
+    Generate a composite _batch_decode function for a Tuple/Struct if every
+    sub-type has both _batch_decode and _fixed_size.  Returns None otherwise.
+    """
+    specs = []
+    for ts in type_mapping:
+        if isinstance(ts, (list, tuple)):
+            ts = ts[1]      # Struct field: [name, type_string]
+        if ts is None:
+            ts = 'Null'
+        cls = rc.get_decoder_class(ts)
+        if cls is None:
+            return None
+        fast_fn = getattr(cls, '_batch_decode', None)
+        size    = getattr(cls, '_fixed_size',    None)
+        if fast_fn is None or size is None:
+            return None
+        specs.append((fast_fn, size))
+
+    _specs = specs  # capture for closure
+
+    def _batch_decode(data, __specs=_specs):
+        result = []
+        offset = 0
+        for fast_fn, size in __specs:
+            result.append(fast_fn(data[offset:]))
+            offset += size
+        return tuple(result)
+
+    total_size = sum(s for _, s in specs)
+
+    return _batch_decode, total_size
 
 if TYPE_CHECKING:
     from scalecodec.types import GenericMetadataVersioned, GenericRegistryType
@@ -51,7 +85,7 @@ class RuntimeConfigurationObject:
         self.implements_scale_info = implements_scale_info
         self.arrow_match_re = re.compile(r'^([^<]*)<(.+)>$')
         self.bracket_match_re = re.compile(r'^\[([A-Za-z0-9]+); ([0-9]+)]$')
-        self._dynamic_class_cache: weakref.WeakValueDictionary = weakref.WeakValueDictionary()
+        self._dynamic_class_cache: dict = {}
 
     @classmethod
     @lru_cache(maxsize=128)
@@ -140,6 +174,11 @@ class RuntimeConfigurationObject:
 
                 decoder_class.build_type_mapping()
 
+                _result = _try_make_tuple_batch_decode(decoder_class.type_mapping, self)
+                if _result is not None:
+                    decoder_class._batch_decode = staticmethod(_result[0])
+                    decoder_class._fixed_size = _result[1]
+
             elif type_string[0] == '[' and type_string[-1] == ']':
                 type_parts = self.bracket_match_re.match(type_string)
 
@@ -152,12 +191,63 @@ class RuntimeConfigurationObject:
                         'sub_type': type_parts[0],
                         'element_count': int(type_parts[1])
                     })
+                    from scalecodec._primitives import U8 as _U8
+                    _n = int(type_parts[1])
+                    if self.get_decoder_class(type_parts[0]) is _U8:
+                        if _n == 0:
+                            decoder_class._batch_decode = staticmethod(lambda data: [])
+                        else:
+                            decoder_class._batch_decode = staticmethod(lambda data, n=_n: '0x' + data[:n].hex())
+                        decoder_class._fixed_size = _n
 
         if decoder_class:
             # Attach RuntimeConfigurationObject to new class
             decoder_class.runtime_config = self
 
         return decoder_class
+
+    def batch_decode(self, list type_strings, list data_list) -> list:
+        """
+        Decode N SCALE-encoded items with minimal per-item overhead.
+
+        More efficient than N calls to create_scale_object().decode() because:
+        - Each unique type class is resolved only once per batch call
+        - Primitive types (u8–u256, i8–i256, bool) use direct struct.unpack /
+          int.from_bytes fast paths, bypassing ScaleType object creation entirely
+
+        Particularly effective for query_map batches where all values share
+        one type string and all keys share another (2 class lookups for N items).
+        """
+        cdef int n = len(type_strings)
+        cdef list results = [None] * n
+        cdef dict local_cache = {}
+        cdef int i
+        cdef str ts
+        cdef object decoder_class, fast_fn, entry, obj
+
+        for i in range(n):
+            ts = type_strings[i]
+            entry = local_cache.get(ts)
+            if entry is None:
+                decoder_class = self.get_decoder_class(ts)
+                if decoder_class is None:
+                    raise NotImplementedError(f'Decoder class for "{ts}" not found')
+                fast_fn = getattr(decoder_class, '_batch_decode', None)
+                entry = (decoder_class, fast_fn)
+                local_cache[ts] = entry
+            else:
+                decoder_class = entry[0]
+                fast_fn = entry[1]
+
+            data = data_list[i]
+            if fast_fn is not None:
+                results[i] = fast_fn(data)
+            else:
+                obj = decoder_class(data=ScaleBytes(data))
+                obj.decode()
+                results[i] = obj.value
+
+        return results
 
     def create_scale_object(self, type_string: Union[str, dict], data: Optional['ScaleBytes'] = None, **kwargs) -> 'ScaleType':
         """
@@ -390,6 +480,15 @@ class RuntimeConfigurationObject:
                 'sub_type': f"{prefix}::{scale_info_type.value['def']['array']['type']}",
                 'element_count': scale_info_type.value['def']['array']['len']
             })
+            from scalecodec._primitives import U8 as _U8
+            _n = scale_info_type.value['def']['array']['len']
+            _sub_cls = self.get_decoder_class(f"{prefix}::{scale_info_type.value['def']['array']['type']}")
+            if _sub_cls is _U8:
+                if _n == 0:
+                    decoder_class._batch_decode = staticmethod(lambda data: [])
+                else:
+                    decoder_class._batch_decode = staticmethod(lambda data, n=_n: '0x' + data[:n].hex())
+                decoder_class._fixed_size = _n
 
         elif 'composite' in scale_info_type.value['def']:
 
@@ -415,6 +514,10 @@ class RuntimeConfigurationObject:
             decoder_class = type(type_string, (base_decoder_class,), {
                 'type_mapping': type_mapping
             })
+            _result = _try_make_tuple_batch_decode(type_mapping, self)
+            if _result is not None:
+                decoder_class._batch_decode = staticmethod(_result[0])
+                decoder_class._fixed_size = _result[1]
 
         elif 'sequence' in scale_info_type.value['def']:
             # Vec
@@ -467,6 +570,10 @@ class RuntimeConfigurationObject:
             decoder_class = type(type_string, (self.get_decoder_class('Tuple'),), {
                 'type_mapping': type_mapping
             })
+            _result = _try_make_tuple_batch_decode(type_mapping, self)
+            if _result is not None:
+                decoder_class._batch_decode = staticmethod(_result[0])
+                decoder_class._fixed_size = _result[1]
 
         elif 'compact' in scale_info_type.value['def']:
             # Compact

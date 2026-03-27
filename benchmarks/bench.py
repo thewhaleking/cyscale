@@ -20,18 +20,22 @@ import timeit
 import argparse
 
 import scalecodec
+
 print(f"scalecodec: {scalecodec.__file__}", flush=True)
 
 from scalecodec.base import RuntimeConfiguration, RuntimeConfigurationObject, ScaleBytes
 from scalecodec.type_registry import load_type_registry_preset, load_type_registry_file
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
-FIXTURES = load_type_registry_file(os.path.join(_HERE, "..", "test", "fixtures", "metadata_hex.json"))
+FIXTURES = load_type_registry_file(
+    os.path.join(_HERE, "..", "test", "fixtures", "metadata_hex.json")
+)
 
 
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
+
 
 def _compact_encode(n: int) -> bytes:
     if n <= 0x3F:
@@ -84,7 +88,7 @@ def header(title: str):
     print(f"  {title}")
     print(f"{'─' * 64}")
     print(f"  {'Benchmark':<44}  {'µs/call':>9}  {'calls':>8}")
-    print(f"  {'─'*44}  {'─'*9}  {'─'*8}")
+    print(f"  {'─' * 44}  {'─' * 9}  {'─' * 8}")
 
 
 def row(name: str, us: float, n: int, results: dict):
@@ -96,6 +100,7 @@ def row(name: str, us: float, n: int, results: dict):
 # SHORT benchmarks — primitives, small types
 # ---------------------------------------------------------------------------
 
+
 def bench_short(results: dict):
     _setup_legacy()
     rc = RuntimeConfiguration()
@@ -103,61 +108,108 @@ def bench_short(results: dict):
     N = 200_000
 
     for type_str, hex_data in [
-        ("u8",   "ff"),
-        ("u16",  "0102"),
-        ("u32",  "01020304"),
-        ("u64",  "0102030405060708"),
+        ("u8", "ff"),
+        ("u16", "0102"),
+        ("u32", "01020304"),
+        ("u64", "0102030405060708"),
         ("u128", "0102030405060708090a0b0c0d0e0f10"),
     ]:
         ba = _hex_to_ba(hex_data)
-        row(f"{type_str} decode",
-            run(lambda t=type_str, b=ba: rc.create_scale_object(t, _sb(b)).decode(), N), N, results)
+        row(
+            f"{type_str} decode",
+            run(lambda t=type_str, b=ba: rc.create_scale_object(t, _sb(b)).decode(), N),
+            N,
+            results,
+        )
 
     # Compact<u32> — 4-byte mode, value=1073741823 → 0xfeffffff
     ba = _hex_to_ba("feffffff")
-    row("Compact<u32> decode",
-        run(lambda: rc.create_scale_object("Compact<u32>", _sb(ba)).decode(), N), N, results)
+    row(
+        "Compact<u32> decode",
+        run(lambda: rc.create_scale_object("Compact<u32>", _sb(ba)).decode(), N),
+        N,
+        results,
+    )
 
     # bool
     ba = _hex_to_ba("01")
-    row("bool decode",
-        run(lambda: rc.create_scale_object("bool", _sb(ba)).decode(), N), N, results)
+    row(
+        "bool decode",
+        run(lambda: rc.create_scale_object("bool", _sb(ba)).decode(), N),
+        N,
+        results,
+    )
 
     # H256
     ba = _hex_to_ba("ab" * 32)
-    row("H256 decode",
-        run(lambda: rc.create_scale_object("H256", _sb(ba)).decode(), N), N, results)
+    row(
+        "H256 decode",
+        run(lambda: rc.create_scale_object("H256", _sb(ba)).decode(), N),
+        N,
+        results,
+    )
 
     # AccountId (ss58_format not set → raw hex returned)
     ba = _hex_to_ba("01" * 32)
-    row("AccountId decode (no SS58)",
-        run(lambda: rc.create_scale_object("AccountId", _sb(ba)).decode(), N), N, results)
+    row(
+        "AccountId decode (no SS58)",
+        run(lambda: rc.create_scale_object("AccountId", _sb(ba)).decode(), N),
+        N,
+        results,
+    )
 
     # Str — "Hello World!" (12 bytes)
     ba = _hex_to_ba("3048656c6c6f20576f726c6421")
-    row("Str decode",
-        run(lambda: rc.create_scale_object("Str", _sb(ba)).decode(), N), N, results)
+    row(
+        "Str decode",
+        run(lambda: rc.create_scale_object("Str", _sb(ba)).decode(), N),
+        N,
+        results,
+    )
 
     # Tuple
-    ba = bytearray(_hex_to_ba("01020304") + _hex_to_ba("0102030405060708") + _hex_to_ba("01"))
-    row("(u32, u64, bool) decode",
-        run(lambda: rc.create_scale_object("(u32, u64, bool)", _sb(ba)).decode(), N), N, results)
+    ba = bytearray(
+        _hex_to_ba("01020304") + _hex_to_ba("0102030405060708") + _hex_to_ba("01")
+    )
+    row(
+        "(u32, u64, bool) decode",
+        run(lambda: rc.create_scale_object("(u32, u64, bool)", _sb(ba)).decode(), N),
+        N,
+        results,
+    )
 
     # Encode
-    row("u32 encode",
-        run(lambda: rc.create_scale_object("u32").encode(305419896), N), N, results)
-    row("u64 encode",
-        run(lambda: rc.create_scale_object("u64").encode(72623859790382856), N), N, results)
-    row("Compact<u32> encode",
-        run(lambda: rc.create_scale_object("Compact<u32>").encode(1073741823), N), N, results)
+    row(
+        "u32 encode",
+        run(lambda: rc.create_scale_object("u32").encode(305419896), N),
+        N,
+        results,
+    )
+    row(
+        "u64 encode",
+        run(lambda: rc.create_scale_object("u64").encode(72623859790382856), N),
+        N,
+        results,
+    )
+    row(
+        "Compact<u32> encode",
+        run(lambda: rc.create_scale_object("Compact<u32>").encode(1073741823), N),
+        N,
+        results,
+    )
     ba_h256 = "0x" + "ab" * 32
-    row("H256 encode",
-        run(lambda: rc.create_scale_object("H256").encode(ba_h256), N), N, results)
+    row(
+        "H256 encode",
+        run(lambda: rc.create_scale_object("H256").encode(ba_h256), N),
+        N,
+        results,
+    )
 
 
 # ---------------------------------------------------------------------------
 # LONG benchmarks — Vec, events, metadata
 # ---------------------------------------------------------------------------
+
 
 def bench_long(results: dict):
     _setup_legacy()
@@ -167,14 +219,22 @@ def bench_long(results: dict):
     # Vec<u32>
     for count, n in [(64, 20_000), (1_024, 2_000), (16_384, 100)]:
         ba = _vec_ba("01020304", count)
-        row(f"Vec<u32> decode ({count:,} elements)",
-            run(lambda b=ba: rc.create_scale_object("Vec<u32>", _sb(b)).decode(), n), n, results)
+        row(
+            f"Vec<u32> decode ({count:,} elements)",
+            run(lambda b=ba: rc.create_scale_object("Vec<u32>", _sb(b)).decode(), n),
+            n,
+            results,
+        )
 
     # Bytes (Vec<u8>)
     for kb, n in [(1, 20_000), (64, 500), (512, 50)]:
         ba = _vec_ba("ab", kb * 1024)
-        row(f"Bytes decode ({kb} KB)",
-            run(lambda b=ba: rc.create_scale_object("Bytes", _sb(b)).decode(), n), n, results)
+        row(
+            f"Bytes decode ({kb} KB)",
+            run(lambda b=ba: rc.create_scale_object("Bytes", _sb(b)).decode(), n),
+            n,
+            results,
+        )
 
     # Vec<EventRecord> — 5-event Kusama block payload (legacy V10 metadata)
     events_ba = _hex_to_ba(
@@ -187,30 +247,57 @@ def bench_long(results: dict):
     meta_v10.decode()
     rc.set_active_spec_version_id(1020)
     n = 2_000
-    row("Vec<EventRecord> decode (5 events, V10)",
-        run(lambda: rc.create_scale_object("Vec<EventRecord>", _sb(events_ba), metadata=meta_v10).decode(), n),
-        n, results)
+    row(
+        "Vec<EventRecord> decode (5 events, V10)",
+        run(
+            lambda: rc.create_scale_object(
+                "Vec<EventRecord>", _sb(events_ba), metadata=meta_v10
+            ).decode(),
+            n,
+        ),
+        n,
+        results,
+    )
 
     # Metadata decode — V10 (85 KB)
     v10_ba = _hex_to_ba(v10_hex)
     n = 30
-    row("MetadataVersioned decode (V10, 85 KB)",
-        run(lambda: rc.create_scale_object("MetadataVersioned", _sb(v10_ba)).decode(), n), n, results)
+    row(
+        "MetadataVersioned decode (V10, 85 KB)",
+        run(
+            lambda: rc.create_scale_object("MetadataVersioned", _sb(v10_ba)).decode(), n
+        ),
+        n,
+        results,
+    )
 
     # Metadata decode — V13 (219 KB)
     v13_ba = _hex_to_ba(FIXTURES["V13"])
     n = 10
-    row("MetadataVersioned decode (V13, 219 KB)",
-        run(lambda: rc.create_scale_object("MetadataVersioned", _sb(v13_ba)).decode(), n), n, results)
+    row(
+        "MetadataVersioned decode (V13, 219 KB)",
+        run(
+            lambda: rc.create_scale_object("MetadataVersioned", _sb(v13_ba)).decode(), n
+        ),
+        n,
+        results,
+    )
 
     # Metadata decode — V14 (300 KB)
     v14_ba = _hex_to_ba(FIXTURES["V14"])
     n = 5
-    row("MetadataVersioned decode (V14, 300 KB)",
-        run(lambda: rc.create_scale_object("MetadataVersioned", _sb(v14_ba)).decode(), n), n, results)
+    row(
+        "MetadataVersioned decode (V14, 300 KB)",
+        run(
+            lambda: rc.create_scale_object("MetadataVersioned", _sb(v14_ba)).decode(), n
+        ),
+        n,
+        results,
+    )
 
     # Full pipeline: Bittensor metadata decode + add_portable_registry (254 KB)
     bt_ba = _hex_to_ba(FIXTURES["bittensor_test"])
+
     def _bt_full():
         rc2 = RuntimeConfigurationObject()
         rc2.update_type_registry(load_type_registry_preset("core"))
@@ -218,14 +305,15 @@ def bench_long(results: dict):
         m = rc2.create_scale_object("MetadataVersioned", _sb(bt_ba))
         m.decode()
         rc2.add_portable_registry(m)
+
     n = 3
-    row("Bittensor metadata + portable registry (254 KB)",
-        run(_bt_full, n), n, results)
+    row("Bittensor metadata + portable registry (254 KB)", run(_bt_full, n), n, results)
 
 
 # ---------------------------------------------------------------------------
 # Entry point
 # ---------------------------------------------------------------------------
+
 
 def main():
     parser = argparse.ArgumentParser()
@@ -244,12 +332,14 @@ def main():
         print(f"  Speedup vs {os.path.basename(args.compare)}")
         print(f"{'─' * 64}")
         print(f"  {'Benchmark':<44}  {'baseline':>9}  {'current':>9}  {'speedup':>8}")
-        print(f"  {'─'*44}  {'─'*9}  {'─'*9}  {'─'*8}")
+        print(f"  {'─' * 44}  {'─' * 9}  {'─' * 9}  {'─' * 8}")
         for name, cur in results.items():
             if name in baseline:
                 ratio = baseline[name] / cur
                 marker = " ◀ slower" if ratio < 0.95 else ""
-                print(f"  {name:<44}  {baseline[name]:>9.2f}  {cur:>9.2f}  {ratio:>7.2f}x{marker}")
+                print(
+                    f"  {name:<44}  {baseline[name]:>9.2f}  {cur:>9.2f}  {ratio:>7.2f}x{marker}"
+                )
 
     if args.save_baseline:
         with open(args.save_baseline, "w") as f:
