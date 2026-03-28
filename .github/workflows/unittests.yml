@@ -26,7 +26,7 @@ jobs:
         pip install Cython setuptools wheel
     - name: Build Cython extensions
       run: python setup.py build_ext --inplace
-    - name: Install test dependencies
-      run: pip install pytest
+    - name: Install package and test dependencies
+      run: pip install ".[test]" --no-build-isolation
     - name: Test with pytest
       run: pytest
