@@ -744,15 +744,15 @@ class ScaleDecoder(ABC):
             # if no runtime config is provided, fallback on singleton
             self.runtime_config = RuntimeConfiguration()
 
-        self.data: Optional[ScaleBytes] = data
+        self.data = data
 
-        self.value_object: Any = None
-        self.value_serialized: Any = None
+        self.value_object = None
+        self.value_serialized = None
 
-        self.decoded: bool = False
+        self.decoded = False
 
-        self.data_start_offset: Optional[int] = None
-        self.data_end_offset: Optional[int] = None
+        self.data_start_offset = None
+        self.data_end_offset = None
 
     @property
     def value(self):
