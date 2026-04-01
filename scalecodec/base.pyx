@@ -152,6 +152,10 @@ class RuntimeConfigurationObject:
         decoder_class = self.type_registry.get('types', {}).get(type_string.lower(), None)
 
         if not decoder_class:
+            # Check dynamic class cache before creating a new one
+            decoder_class = self._dynamic_class_cache.get(type_string)
+
+        if not decoder_class:
             # Type string containg subtype
             if type_string[-1:] == '>':
 
@@ -183,6 +187,8 @@ class RuntimeConfigurationObject:
                     decoder_class._batch_decode = staticmethod(_result[0])
                     decoder_class._fixed_size = _result[1]
 
+                self._dynamic_class_cache[type_string] = decoder_class
+
             elif type_string[0] == '[' and type_string[-1] == ']':
                 type_parts = self.bracket_match_re.match(type_string)
 
@@ -205,6 +211,7 @@ class RuntimeConfigurationObject:
                         else:
                             decoder_class._batch_decode = staticmethod(lambda data, n=_n: '0x' + data[:n].hex())
                         decoder_class._fixed_size = _n
+                    self._dynamic_class_cache[type_string] = decoder_class
 
         if decoder_class:
             # Attach RuntimeConfigurationObject to new class
