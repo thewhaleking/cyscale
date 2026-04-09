@@ -33,6 +33,7 @@ class ScaleType(ScaleDecoder[T_co], ABC, Generic[T_co]):
     scale_info_type: Any
     metadata: Any
     meta_info: dict
+    elements: list[Any]
 
     def __init__(
         self,
