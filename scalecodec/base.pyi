@@ -108,7 +108,14 @@ class RuntimeConfigurationObject:
     @overload
     def create_scale_object(
         self,
-        type_string: Literal["GenericCall"],
+        type_string: Literal["Era"],
+        data: Optional[ScaleBytes] = None,
+        **kwargs: Any,
+    ) -> "Era": ...
+    @overload
+    def create_scale_object(
+        self,
+        type_string: Literal["GenericCall", "Call"],
         data: Optional[ScaleBytes] = None,
         **kwargs: Any,
     ) -> "GenericCall": ...
