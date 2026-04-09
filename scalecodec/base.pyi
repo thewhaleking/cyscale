@@ -42,6 +42,8 @@ class ScaleType(ScaleDecoder[T_co], ABC, Generic[T_co]):
         runtime_config: Optional["RuntimeConfigurationObject"] = None,
         **kwargs: Any,
     ) -> None: ...
+    def __getitem__(self, item: Any) -> Any: ...
+    def __iter__(self) -> Any: ...
     @classmethod
     def generate_type_decomposition(
         cls, _recursion_level: int = 0, max_recursion: int = ...
@@ -103,6 +105,20 @@ class RuntimeConfigurationObject:
         data: Optional[ScaleBytes] = None,
         **kwargs: Any,
     ) -> "GenericMetadataAll": ...
+    @overload
+    def create_scale_object(
+        self,
+        type_string: Literal["GenericCall"],
+        data: Optional[ScaleBytes] = None,
+        **kwargs: Any,
+    ) -> "GenericCall": ...
+    @overload
+    def create_scale_object(
+        self,
+        type_string: Literal["Extrinsic", "GenericExtrinsic"],
+        data: Optional[ScaleBytes] = None,
+        **kwargs: Any,
+    ) -> "GenericExtrinsic": ...
     @overload
     def create_scale_object(
         self,
