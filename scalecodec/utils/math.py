@@ -4,9 +4,14 @@ library.
 
 from decimal import Decimal
 from math import ceil, log2
-from typing import Union
+from typing import TypedDict
 
-_FixedInput = Union[int, dict]
+
+class FixedPoint(TypedDict):
+    bits: int
+
+
+_FixedInput = int | FixedPoint
 
 
 def _extract_bits(value: _FixedInput) -> int:
