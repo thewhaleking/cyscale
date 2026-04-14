@@ -8,6 +8,10 @@ from typing import TypedDict
 
 
 class FixedPoint(TypedDict):
+    """
+    Represents a fixed point `U64F64` number.
+    Where `bits` is a U128 representation of the fixed point number.
+    """
     bits: int
 
 
