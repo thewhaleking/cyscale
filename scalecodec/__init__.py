@@ -6,4 +6,5 @@ from .base import (
     ScaleType,
     RuntimeConfiguration,
     RuntimeConfigurationObject,
+    ScaleValue,
 )
