@@ -110,20 +110,37 @@ class TestMetadataRegistry(unittest.TestCase):
 
         self.assertGreater(len(metadata_obj.get_signed_extensions().items()), 0)
 
-    # def test_pickle_test(self):
-    #     metadata_obj = self.runtime_config.create_scale_object(
-    #         "MetadataVersioned", data=ScaleBytes(self.metadata_fixture_dict['V14'])
-    #     )
-    #     metadata_obj.decode()
-    #
-    #     # for name, decoder_class in self.runtime_config.type_registry['types'].items():
-    #     #     import __main__
-    #     #
-    #     #     globals()[decoder_class.__name__] = decoder_class
-    #
-    #     # assert(type(metadata_obj) is globals()['MetadataVersioned'])
-    #
-    #     pickle_data = pickle.dumps(metadata_obj)
+    def test_pickle_does_not_synthesize_duplicate_primitive_classes(self):
+        # Regression: add_portable_registry mutates `scale_info_type` onto
+        # canonical primitives (e.g. U8). __reduce__ then harvests that
+        # inherited attribute into cls_attrs, and _rebuild_scale_decoder
+        # would synthesize a duplicate `type('U8', (U8,), ...)` subclass on
+        # unpickle. clear_type_registry's all_subclasses() sweep is a `set`
+        # — non-deterministic order — so the duplicate sometimes shadowed
+        # the canonical primitive in the registry, breaking `is U8` checks
+        # downstream and producing intermittent
+        # "Given value is not a list" errors during extrinsic encoding.
+        from scalecodec._primitives import U8
+
+        rc = RuntimeConfigurationObject()
+        rc.update_type_registry(load_type_registry_preset("core"))
+        metadata_obj = rc.create_scale_object(
+            "MetadataVersioned", data=ScaleBytes(self.metadata_fixture_dict["V14"])
+        )
+        metadata_obj.decode()
+        rc.add_portable_registry(metadata_obj)
+
+        restored = pickle.loads(pickle.dumps(metadata_obj))
+
+        u8_classes = [
+            c for c in RuntimeConfigurationObject.all_subclasses(U8.__mro__[1])
+            if c.__name__ == "U8"
+        ]
+        self.assertEqual(
+            u8_classes, [U8],
+            f"Unpickling synthesized duplicate U8 classes: {u8_classes}",
+        )
+        self.assertIsNotNone(restored)
 
 
 class TestMetadataTypes(unittest.TestCase):

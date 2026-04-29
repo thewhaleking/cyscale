@@ -61,8 +61,15 @@ def _rebuild_scale_decoder(base_module, base_qualname, cls_name, cls_attrs, stat
     base_cls = mod
     for part in base_qualname.split('.'):
         base_cls = getattr(base_cls, part)
-    # Use the importable class directly when it IS the original class
-    if base_cls.__qualname__ == cls_name and not cls_attrs:
+    # Use the importable class directly when it IS the original class.
+    # `scale_info_type` is metadata annotation that `add_portable_registry`
+    # may have mutated onto a primitive (e.g. U8) — it's harvested from
+    # inherited attrs by __reduce__. Synthesizing a `type('U8', (U8,), ...)`
+    # subclass for it would shadow the canonical primitive in
+    # `clear_type_registry`'s all_subclasses() sweep (set order is
+    # non-deterministic) and break `is U8` identity checks downstream.
+    structural = {k: v for k, v in cls_attrs.items() if k != 'scale_info_type'}
+    if base_cls.__qualname__ == cls_name and not structural:
         cls = base_cls
     else:
         cache_key = (base_module, base_qualname, cls_name)
